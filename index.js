@@ -14,6 +14,7 @@ const calculateProgress = async () => {
   const cards = await getListsCard(lists);
 
   let total = 0;
+  let inReview = 0;
   let done = 0;
 
   Object.entries(cards).forEach((arr) => {
@@ -21,6 +22,9 @@ const calculateProgress = async () => {
 
     if (list.key.startsWith(trello.listDoneNamePrefix)) {
       done += list.val.length;
+    }
+    if (list.key === trello.listInReviewName) {
+      inReview += list.val.length;
     }
     total += list.val.length;
   });
@@ -42,6 +46,9 @@ const calculateProgress = async () => {
     "\n" +
     "未完了のタスク：" +
     (total - done) +
+    "\n" +
+    "レビュー待ちのタスク：" +
+    inReview +
     "\n" +
     "完了したタスク：" +
     done;
