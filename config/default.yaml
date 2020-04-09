@@ -1,0 +1,9 @@
+app:
+  trello:
+    secretFileDirection: "./.secret/.trello.json"
+    boardId: "5e8d6e60c3a2647221556d6a"
+    listDoneName: "DONE"
+  slack:
+    secretFileDirection: "./.secret/.slack.json"
+    channelId: "C011FT91QLS"
+    username: "Trello 進捗発表くん"
