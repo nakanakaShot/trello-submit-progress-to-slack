@@ -19,7 +19,7 @@ const calculateProgress = async () => {
   Object.entries(cards).forEach((arr) => {
     let list = { key: arr[0], val: arr[1] };
 
-    if (list.key === trello.listDoneName) {
+    if (list.key.startsWith(trello.listDoneNamePrefix)) {
       done += list.val.length;
     }
     total += list.val.length;

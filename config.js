@@ -20,7 +20,7 @@ const initProps = () => {
       apiToken: trelloSecret.api_token,
 
       boardId: propsRoot.trello.boardId,
-      listDoneName: propsRoot.trello.listDoneName,
+      listDoneNamePrefix: propsRoot.trello.listDoneNamePrefix,
     },
     slack: {
       apiToken: slackSecret.api_token,
