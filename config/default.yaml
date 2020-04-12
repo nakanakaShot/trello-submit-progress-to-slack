@@ -1,0 +1,8 @@
+app:
+  trello:
+    secretFileDirection: "./.secret/.trello.json"
+    listDoneNamePrefix: "DONE"
+    listInReviewName: "IN REVIEW"
+  slack:
+    secretFileDirection: "./.secret/.slack.json"
+    username: "Trelloの進捗発表くん"
