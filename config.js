@@ -1,5 +1,5 @@
-const config = require("config");
 const fs = require("fs");
+const config = require("config");
 
 const propsRoot = config.app;
 
@@ -19,13 +19,13 @@ const initProps = () => {
       apiKey: trelloSecret.api_key,
       apiToken: trelloSecret.api_token,
 
-      boardId: propsRoot.trello.boardId,
+      boardId: trelloSecret.board_id,
       listDoneNamePrefix: propsRoot.trello.listDoneNamePrefix,
       listInReviewName: propsRoot.trello.listInReviewName,
     },
     slack: {
       apiToken: slackSecret.api_token,
-      channelId: propsRoot.slack.channelId,
+      channelId: slackSecret.channel_id,
     },
   };
 
