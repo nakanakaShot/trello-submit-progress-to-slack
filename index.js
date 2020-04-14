@@ -10,9 +10,86 @@ const today = new Date();
 
 const calculateProgress = async () => {
   const lists = await getBoardsList();
-
   const cards = await getListsCard(lists);
 
+  const sprintProgressSummary = summarizeSprintProgress(cards);
+  const totalProgressSummary = summarizeTotalProgress(cards);
+
+  const sprintProgressPercentInt = parseInt(
+    calculateProgressPercent(sprintProgressSummary)
+  );
+
+  const totalProgressPercentInt = parseInt(
+    calculateProgressPercent(totalProgressSummary)
+  );
+
+  const formattedDate = "【" + dateFormatter.formatDate(today) + "】\n";
+
+  let message =
+    formattedDate +
+    generateProgressText(
+      "本スプリント",
+      sprintProgressPercentInt,
+      sprintProgressSummary
+    ) +
+    "\n" +
+    "-------------------\n" +
+    generateProgressText("全体", totalProgressPercentInt, totalProgressSummary);
+  await submitChatToSlack(message);
+};
+
+const generateProgressText = (subject, percentInt, summary) => {
+  const text =
+    subject +
+    "の作業進捗率：" +
+    percentInt +
+    "%" +
+    "\n" +
+    "総タスク数：" +
+    summary.total +
+    "\n" +
+    "未完了のタスク：" +
+    (summary.total - summary.done) +
+    "\n" +
+    "レビュー待ちのタスク：" +
+    summary.inReview +
+    "\n" +
+    "完了したタスク：" +
+    summary.done;
+
+  return text;
+};
+
+const calculateProgressPercent = (summary) => {
+  return !summary.total || !summary.done
+    ? 0
+    : (summary.done / summary.total) * 100;
+};
+
+const summarizeSprintProgress = (cards) => {
+  let total = 0;
+  let inReview = 0;
+  let done = 0;
+
+  Object.entries(cards).forEach((arr) => {
+    let list = { key: arr[0], val: arr[1] };
+
+    if (list.key.startsWith(trello.listExcludeAllCardsName)) {
+      return;
+    }
+    if (list.key === trello.listDoneNamePrefix) {
+      done += list.val.length;
+    }
+    if (list.key === trello.listInReviewName) {
+      inReview += list.val.length;
+    }
+    total += list.val.length;
+  });
+
+  return { total: total, inReview: inReview, done: done };
+};
+
+const summarizeTotalProgress = (cards) => {
   let total = 0;
   let inReview = 0;
   let done = 0;
@@ -29,31 +106,7 @@ const calculateProgress = async () => {
     total += list.val.length;
   });
 
-  const progressPercentNum = !total || !done ? 0 : (done / total) * 100;
-  const progressPercentInt = parseInt(progressPercentNum);
-
-  let message =
-    "【" +
-    dateFormatter.formatDate(today) +
-    "】 " +
-    "\n" +
-    "現在までの作業進捗率：" +
-    progressPercentInt +
-    "%" +
-    "\n" +
-    "全タスク数　　：" +
-    total +
-    "\n" +
-    "未完了のタスク：" +
-    (total - done) +
-    "\n" +
-    "レビュー待ちのタスク：" +
-    inReview +
-    "\n" +
-    "完了したタスク：" +
-    done;
-
-  await submitChatToSlack(message);
+  return { total: total, inReview: inReview, done: done };
 };
 
 const getListsCard = async (lists) => {

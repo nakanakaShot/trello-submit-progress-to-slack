@@ -3,6 +3,7 @@ app:
     secretFileDirection: "./.secret/.trello.json"
     listDoneNamePrefix: "DONE"
     listInReviewName: "IN REVIEW"
+    listExcludeAllCardsName: "バックログ"
   slack:
     secretFileDirection: "./.secret/.slack.json"
     username: "Trelloの進捗発表くん"
