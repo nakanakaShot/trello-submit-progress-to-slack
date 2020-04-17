@@ -32,8 +32,7 @@ const calculateProgress = async () => {
       sprintProgressPercentInt,
       sprintProgressSummary
     ) +
-    "\n" +
-    "-------------------\n" +
+    "\n-------------------\n" +
     generateProgressText("全体", totalProgressPercentInt, totalProgressSummary);
   await submitChatToSlack(message);
 };
@@ -77,6 +76,9 @@ const summarizeSprintProgress = (cards) => {
     if (list.key.startsWith(trello.listExcludeAllCardsName)) {
       return;
     }
+    if (isPastSprintsDone(list)) {
+      return;
+    }
     if (list.key === trello.listDoneNamePrefix) {
       done += list.val.length;
     }
@@ -87,6 +89,13 @@ const summarizeSprintProgress = (cards) => {
   });
 
   return { total: total, inReview: inReview, done: done };
+};
+
+const isPastSprintsDone = (list) => {
+  return (
+    list.key != trello.listDoneNamePrefix &&
+    list.key.startsWith(trello.listDoneNamePrefix)
+  );
 };
 
 const summarizeTotalProgress = (cards) => {
